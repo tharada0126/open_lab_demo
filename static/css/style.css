@@ -1,0 +1,98 @@
+/* 全体レイアウト */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.category-section {
+    margin: 20px 0;
+}
+
+.category-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* グリッドコンテナ */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* 各アイテムのスタイル */
+.grid-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    width: 150px;
+}
+
+/* 画像スタイル */
+.grid-item img {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+/* ラベルスタイル */
+.grid-item label {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* スライダーのスタイル */
+.slider {
+    width: 100%;
+}
+
+/* 全体を左右に並べる */
+.container {
+    display: flex;
+    gap: 20px;
+}
+
+/* カテゴリ表示エリア（左側） */
+#ingredients {
+    flex: 1;
+    border-right: 1px solid #ddd;
+    padding-right: 20px;
+}
+
+/* 結果表示エリア（右側） */
+#results {
+    flex: 1;
+    padding-left: 20px;
+}
+
+.spacer {
+    display: inline-block;
+    width: 20px; /* 適当なスペースの幅 */
+}
+
+/* selectedItemsエリアをグリッドに設定 */
+#selectedItems {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(120px, 1fr)); /* 各アイテムの最小幅を120pxに設定 */
+    gap: 20px; /* グリッド間のスペース */
+    margin-top: 20px; /* 上部にスペースを追加 */
+}
+
+/* 各選択アイテムのスタイル */
+.selected-item {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}

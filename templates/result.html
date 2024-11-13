@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>計算結果</title>
+</head>
+<body>
+    <h1>計算結果</h1>
+    <p>合計値: {{ total_max_value }}</p>
+    
+    <h2>カテゴリごとの最大アイテム</h2>
+    <ul>
+        {% for category, item in category_max_items.items() %}
+            <li>{{ category }} - {{ item.name }}: {{ item.value }}</li>
+        {% endfor %}
+    </ul>
+    
+    <a href="{{ url_for('index') }}">戻る</a>
+</body>
+</html>

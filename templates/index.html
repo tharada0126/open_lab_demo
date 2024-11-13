@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>原田研究室オープンラボ</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}"/>
+    <script>
+        // Flaskから静的ファイルのベースパスをJavaScriptに渡す
+        const baseImagePath = "{{ url_for('static', filename='images/') }}";
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+    <h1>好みのハンバーガーを進化計算で作ろう</h1>
+    <h2>スライドバーを動かして各食材の満足度（1〜100）を選んでください。</h2>
+    <h2><span id="budget">0</span>以内で最適な組み合わせを提案します。</h2>
+
+    <!-- コンテナ全体をフレックスボックスで配置 -->
+    <div class="container">
+        <!-- カテゴリ表示エリア（左側） -->
+        <div id="ingredients"></div>
+
+        <!-- 結果表示エリア（右側） -->
+        <div id="results">
+            <button id="calculateButton">計算実行</button>
+            <h2><span id="resultHeader"></span></h2>
+            <h3><span id="sumValue"></span><span class="spacer"></span><span id="sumPrice"></span></h3>
+            <div id="selectedItems"></div>
+        </div>
+    </div>
+</body>
+</html>
