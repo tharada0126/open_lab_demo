@@ -90,7 +90,7 @@ document.getElementById('calculateButton').addEventListener('click', () => {
     })
     .then(response => response.json())
     .then(data => {
-        document.getElementById('resultHeader').textContent = '選択されたアイテムは以下のとおりです。';
+        document.getElementById('resultHeader').textContent = '選択された食材は以下のとおりです。';
         document.getElementById('sumPrice').textContent = `合計金額: ${data.price}円`;
         document.getElementById('sumValue').textContent = `合計満足度: ${data.value}`;
 
