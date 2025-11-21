@@ -1,10 +1,10 @@
 // 各食材情報に値段を追加
 const categories = {
     "肉類": [
-        { name: "ベーコン", image: "hamburger_goods_bacon.png", price: 200 },
-        { name: "チキン", image: "hamburger_goods_chicken.png", price: 250 },
-        { name: "ハンバーグ", image: "hamburger_goods_hamburg.png", price: 300 },
-        { name: "フィッシュ", image: "hamburger_goods_fish.png", price: 230 }
+        { name: "ベーコン", image: "hamburger_goods_bacon.png", price: 130 },
+        { name: "チキン", image: "hamburger_goods_chicken.png", price: 180 },
+        { name: "ハンバーグ", image: "hamburger_goods_hamburg.png", price: 200 },
+        { name: "フィッシュ", image: "hamburger_goods_fish.png", price: 150 }
     ],
     "ソース類": [
         { name: "てりやきソース", image: "hamburger_goods_teriyaki.png", price: 50 },
