@@ -29,8 +29,9 @@ class Problem:
         self.num_meet = len(self.problem['meet'])
         self.num_sauce = len(self.problem['sauce'])
         self.num_topping = len(self.problem['topping'])
-        self.dim = 2 + self.num_topping
+        self.dim = 1 + self.num_meet + self.num_topping
         self.budget = budget
+        self.max_meet = 2  # 肉類の最大枚数
     
     def _convert_problem(self, problem):
         key_dict = {"肉類": "meet", "ソース類": "sauce", "その他トッピング": "topping"}
@@ -41,8 +42,28 @@ class Problem:
 
     def generate_individual(self):
         ind = []
-        ind.append(np.random.randint(0, self.num_meet))
+        # ソース類は1つ選択（インデックス）
         ind.append(np.random.randint(0, self.num_sauce))
+        # 肉類は各種類0〜2枚まで選択可能（各要素が0, 1, 2の値を持つ）
+        # 最低1枚は必ず選ばれる
+        total_meet = 0
+        meet_selection = []
+        for _ in range(self.num_meet):
+            if total_meet >= self.max_meet:
+                meet_selection.append(0)
+            else:
+                max_this_meet = min(2, self.max_meet - total_meet)
+                count = np.random.randint(0, max_this_meet + 1)
+                meet_selection.append(count)
+                total_meet += count
+        
+        # 肉が1枚も選ばれていない場合、ランダムに1枚追加
+        if total_meet == 0:
+            random_meet_idx = np.random.randint(0, self.num_meet)
+            meet_selection[random_meet_idx] = 1
+        
+        ind.extend(meet_selection)
+        # トッピング類は0または1
         for _ in range(self.num_topping):
             ind.append(np.random.randint(0, 2))
         return ind
@@ -50,33 +71,57 @@ class Problem:
     def evaluation(self, ind):
         sum_price = 0
         sum_value = 0
-        meet = self.problem['meet'][ind[0]]
-        sum_price += meet['price']
-        sum_value += meet['value']
-        sauce = self.problem['sauce'][ind[1]]
+        # ソース類
+        sauce = self.problem['sauce'][ind[0]]
         sum_price += sauce['price']
         sum_value += sauce['value']
+        # 肉類（各種類0〜2枚まで選択可能、合計最大2枚まで）
+        meet_count = 0
+        for i in range(self.num_meet):
+            count = ind[1 + i]
+            if count > 0:
+                meet = self.problem['meet'][i]
+                sum_price += meet['price'] * count
+                sum_value += meet['value'] * count
+                meet_count += count
+        # 肉類が0枚の場合はペナルティ（最低1枚は必要）
+        if meet_count == 0:
+            sum_value -= 10000
+        # 肉類が2枚を超える場合はペナルティ
+        if meet_count > self.max_meet:
+            sum_value -= (meet_count - self.max_meet) * 1000
+        # トッピング類
         for i in range(self.num_topping):
-            if ind[i+2] == 1:
+            if ind[1 + self.num_meet + i] == 1:
                 topping = self.problem['topping'][i]
                 sum_price += topping['price']
                 sum_value += topping['value']
         return sum_price, sum_value
     
     def show_selected_items(self, ind):
-        meet = self.problem['meet'][ind[0]]
-        print(meet)
-        sauce = self.problem['sauce'][ind[1]]
+        sauce = self.problem['sauce'][ind[0]]
         print(sauce)
-        toppings = [self.problem['topping'][i] for i in range(self.num_topping) if ind[i+2] == 1]
+        for i in range(self.num_meet):
+            count = ind[1 + i]
+            if count > 0:
+                meet = self.problem['meet'][i]
+                for _ in range(count):
+                    print(meet)
+        toppings = [self.problem['topping'][i] for i in range(self.num_topping) if ind[1 + self.num_meet + i] == 1]
         for topping in toppings:
             print(topping)
     
     def get_selected_items(self, ind):
-        meet = self.problem['meet'][ind[0]]
-        sauce = self.problem['sauce'][ind[1]]
-        toppings = [self.problem['topping'][i] for i in range(self.num_topping) if ind[i+2] == 1]
-        res = [meet, sauce] + toppings
+        sauce = self.problem['sauce'][ind[0]]
+        meets = []
+        for i in range(self.num_meet):
+            count = ind[1 + i]
+            if count > 0:
+                meet = self.problem['meet'][i]
+                for _ in range(count):
+                    meets.append(meet)
+        toppings = [self.problem['topping'][i] for i in range(self.num_topping) if ind[1 + self.num_meet + i] == 1]
+        res = [sauce] + meets + toppings
         return res
 
 def initialization(population_size, problem):
@@ -90,11 +135,21 @@ def mutation(ind, mutation_rate, problem):
     for i in range(len(ind)):
         if np.random.rand() < mutation_rate:
             if i == 0:
-                ind[i] = np.random.randint(0, problem.num_meet)
-            elif i == 1:
+                # ソース類の選択
                 ind[i] = np.random.randint(0, problem.num_sauce)
+            elif i <= problem.num_meet:
+                # 肉類の枚数（0〜2枚）
+                ind[i] = np.random.randint(0, 3)
             else:
+                # トッピング類のビットフラグ
                 ind[i] = np.random.randint(0, 2)
+    
+    # 突然変異後、肉が1枚も選ばれていない場合は修正
+    meet_count = sum(ind[1:1+problem.num_meet])
+    if meet_count == 0:
+        random_meet_idx = np.random.randint(0, problem.num_meet)
+        ind[1 + random_meet_idx] = 1
+    
     return ind
 
 def calculate_fitness(ind, problem):

@@ -13,8 +13,18 @@
 </head>
 <body>
     <h1>好みのハンバーガーを進化計算で作ろう</h1>
-    <h2>スライドバーを動かして各食材の満足度（1〜100）を選んでください。</h2>
-    <h2><span id="budget">0</span>以内で最適な組み合わせを提案します。</h2>
+    <h2>スライドバーを動かして各食材の満足度(-100〜100)を選んでください。</h2>
+    <div class="budget-selector">
+        <label for="budgetSelect">予算を選択してください: </label>
+        <select id="budgetSelect">
+            <option value="500" selected>500円</option>
+            <option value="750">750円</option>
+            <option value="1000">1000円</option>
+            <option value="1250">1250円</option>
+            <option value="1500">1500円</option>
+        </select>
+    </div>
+    <h2><span id="budget">500</span>円以内で最適な組み合わせを提案します。</h2>
 
     <!-- コンテナ全体をフレックスボックスで配置 -->
     <div class="container">

@@ -12,8 +12,9 @@ def index():
 def calculate_sum():
     data = request.json
     sliders = data.get('sliders', [])
+    budget = data.get('budget', 500)
 
-    problem = Problem(sliders, 500)
+    problem = Problem(sliders, budget)
     best_ind, best_price, best_value, selected_items = genetic_algorithm(100, problem, 500, 0.8, 0.1)
     print(f"Best Price: {best_price}, Best Value: {best_value}")
     print("Selected Items")

@@ -28,10 +28,16 @@ const categories = {
     ]
 };
 
-const budget = 500;
+let budget = 500;
 
 // 予算を表示する
-document.getElementById('budget').textContent = `${budget}円`;
+document.getElementById('budget').textContent = budget;
+
+// 予算セレクトボックスの変更イベント
+document.getElementById('budgetSelect').addEventListener('change', (event) => {
+    budget = Number(event.target.value);
+    document.getElementById('budget').textContent = budget;
+});
 
 // スライダーアイテムを生成する関数
 function sliderItem({ name, image, price }) {
@@ -39,7 +45,7 @@ function sliderItem({ name, image, price }) {
         <div class="grid-item">
             <label>${name} - ${price}円</label>
             <img src="${baseImagePath}${image}" alt="${name}"/>
-            <input type="range" class="slider" min="1" max="100" step="1" value="50" name="${name.toLowerCase()}">
+            <input type="range" class="slider" min="-100" max="100" step="1" value="50" name="${name.toLowerCase()}">
             <span id="${name.toLowerCase()}_value">50</span>
         </div>
     `;
@@ -86,7 +92,7 @@ document.getElementById('calculateButton').addEventListener('click', () => {
     fetch('/calculate_sum', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sliders: sliderData })
+        body: JSON.stringify({ sliders: sliderData, budget: budget })
     })
     .then(response => response.json())
     .then(data => {
